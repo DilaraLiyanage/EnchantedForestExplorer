@@ -1,0 +1,46 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build EnchantedForest (g++)",
+			"type": "shell",
+			"command": "g++",
+			"args": [
+				"-std=c++17",
+				"-O2",
+				"-I.",
+				"-I\"C:/Program Files (x86)/GLEW/include\"",
+				"-I\"C:/Program Files/GLFW/include\"",
+				// If GLM is installed via MSYS2 or system, g++ will find it on include path.
+				// Otherwise, add an explicit include path here, e.g. "-I\"C:/msys64/mingw64/include\""
+				"main.cpp",
+				"shader_utils.cpp",
+				"model.cpp",
+				"-L\"C:/Program Files (x86)/GLEW/lib/Release/x64\"",
+				"-L\"C:/Program Files/GLFW/lib\"",
+				"-lglew32",
+				"-lglfw3",
+				"-lopengl32",
+				// Common Windows libs needed when linking GLFW with MinGW
+				"-luser32",
+				"-lgdi32",
+				"-lshell32",
+				"-lkernel32",
+				"-lws2_32",
+				"-lbcrypt",
+				"-o",
+				"bin/Debug/EnchantedForest.exe"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

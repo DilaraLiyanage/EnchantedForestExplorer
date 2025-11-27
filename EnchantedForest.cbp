@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="EnchantedForest" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/EnchantedForest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="D:/SLIIT/Academics/Year3/Y3S1/GV/Assignment/OpenGL/GLM/glm-master" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/EnchantedForest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="EnchantedForest.cbp" />
+		<Unit filename="EnchantedForest.depend" />
+		<Unit filename="EnchantedForest.layout" />
+		<Unit filename="README.md" />
+		<Unit filename="bresenham.h" />
+		<Unit filename="circle.h" />
+		<Unit filename="cube_utils.h" />
+		<Unit filename="forest.vert" />
+		<Unit filename="fragment_shader.glsl" />
+		<!-- Removed missing input/input.cpp, input/input.h, render/render2d.cpp, render/render2d.h, unused layout/types.h -->
+		<Unit filename="main.cpp" />
+		<Unit filename="model.cpp" />
+		<Unit filename="model.h" />
+		<Unit filename="shader_utils.cpp" />
+		<Unit filename="shader_utils.h" />
+		<Unit filename="vertex_shader.glsl" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
