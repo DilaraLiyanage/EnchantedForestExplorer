@@ -96,6 +96,69 @@ The 3D view renders:
 - Shader files: `forest.vert` and `fragment_shader.glsl`
 - Window title reflects the active view for presentation clarity
 
+## Repository
+
+- GitHub: https://github.com/DilaraLiyanage/EnchantedForestExplorer.git
+
+## Quick Run (Portable)
+
+If you have the prebuilt `EnchantedForest.exe`, place it in `bin/Debug` alongside:
+- `forest.vert`, `fragment_shader.glsl`
+- `Models/` folder (contains `fountain.obj`, textures like `fountain.png`, `grass.png`, `moss.png`, `purple.png`, `path.png`, `trunk.png`, `leaves.png`)
+- Required DLLs next to the exe: `glew32.dll`, `glfw3.dll`, (optionally) `freeglut.dll`, `assimp*.dll`, `zlib1.dll`, and if MinGW-built: `libstdc++-6.dll`, `libgcc_s_seh-1.dll`, `libwinpthread-1.dll`.
+
+Run from PowerShell with the working directory set to the exe folder:
+
+```powershell
+Set-Location "D:\SLIIT\Academics\Year3\Y3S1\GV\Assignment\OpenGL\Projects\EnchantedForest\bin\Debug"
+./EnchantedForest.exe
+```
+
+See `documentation.md` for the full portable guide and troubleshooting.
+
+## Build from Source (Windows)
+
+You can build with MinGW-w64 `g++` or Code::Blocks (MinGW toolchain).
+
+### Install headers/libs
+
+- GLEW (e.g., `C:\\Program Files (x86)\\GLEW`)
+- GLFW (e.g., `C:\\Program Files\\GLFW`)
+- Assimp (prebuilt binaries; DLL name may vary: `assimp.dll` or `libassimp-*.dll`)
+- Optional: FreeGLUT
+
+Typical library names to link: `glew32`, `glfw3`, `opengl32`, `user32`, `gdi32`, `shell32`, `kernel32`, `ws2_32`, `bcrypt`, and if used: `assimp`, `freeglut`, `zlib1`.
+
+### Code::Blocks configuration
+
+- Compiler options: `-std=c++17 -O2`
+- Search directories → Compiler:
+  - `C:\\Program Files (x86)\\GLEW\\include`
+  - `C:\\Program Files\\GLFW\\include`
+- Search directories → Linker:
+  - `C:\\Program Files (x86)\\GLEW\\lib\\Release\\x64`
+  - `C:\\Program Files\\GLFW\\lib`
+- Output target: `bin/Debug/EnchantedForest.exe` (or your preferred path)
+- Copy the required DLLs next to the exe after building (see Quick Run section).
+
+### Build with g++ (matches VS Code task)
+
+From the project root:
+
+```powershell
+g++ -std=c++17 -O2 \
+  -I. \
+  -I"C:/Program Files (x86)/GLEW/include" \
+  -I"C:/Program Files/GLFW/include" \
+  main.cpp shader_utils.cpp model.cpp \
+  -L"C:/Program Files (x86)/GLEW/lib/Release/x64" \
+  -L"C:/Program Files/GLFW/lib" \
+  -lglew32 -lglfw3 -lopengl32 -luser32 -lgdi32 -lshell32 -lkernel32 -lws2_32 -lbcrypt \
+  -o bin/Debug/EnchantedForest.exe
+```
+
+If linking Assimp/FreeGLUT, append `-lassimp -lfreeglut -lz` and add their library directories via `-L...`. Ensure the corresponding DLLs are beside the exe at runtime.
+
 ## Rubric Alignment
 
 - Technical Implementation: Algorithms correct and demonstrated; 2D/3D integration; guards for stability

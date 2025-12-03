@@ -1,8 +1,22 @@
-# Enchanted Forest — Portable Run Guide (Windows)
+# Enchanted Forest — Run & Build Guide (Windows)
 
-This guide explains how to run `EnchantedForest.exe` directly from `bin/Debug` by placing all required runtime libraries (DLLs) and assets beside the executable so it runs on any compatible Windows machine without installing toolchains.
+This guide covers running the prebuilt app and building from source. If you only need to run the app, see the Portable Run Guide below. For building and linking libraries in Code::Blocks or `g++`, see Development Setup.
 
-## 1) Folder layout (keep these relative paths)
+## Source Code & Repository
+
+- GitHub: https://github.com/DilaraLiyanage/EnchantedForestExplorer.git
+- Clone (PowerShell):
+
+```powershell
+git clone https://github.com/DilaraLiyanage/EnchantedForestExplorer.git
+Set-Location EnchantedForestExplorer
+```
+
+---
+
+## Portable Run Guide
+
+### 1) Folder layout (keep these relative paths)
 
 Place the following in the same folder as `EnchantedForest.exe` (typically `bin/Debug`):
 
@@ -18,7 +32,7 @@ Place the following in the same folder as `EnchantedForest.exe` (typically `bin/
 
 Important: The program loads assets via relative paths (e.g., `Models/fountain.obj`). Do not flatten the `Models` directory. Keep the two shader files (`forest.vert`, `fragment_shader.glsl`) next to the exe.
 
-## 2) Required runtime DLLs (place next to the exe)
+### 2) Required runtime DLLs (place next to the exe)
 
 Copy these DLLs next to `EnchantedForest.exe`:
 
@@ -39,7 +53,7 @@ Notes
 - On MSYS2 setups, DLLs are typically under `C:\msys64\mingw64\bin`. On other installs, check your toolchain/lib folders.
 - If your environment links any of the above statically, their DLL may not be needed.
 
-## 3) Quick start (double‑click or PowerShell)
+### 3) Quick start (double‑click or PowerShell)
 
 - Double‑click `EnchantedForest.exe`, or run from PowerShell with the working directory set to the exe folder:
 
@@ -53,7 +67,7 @@ Set-Location "D:\SLIIT\Academics\Year3\Y3S1\GV\Assignment\OpenGL\Projects\Enchan
 
 If the window opens but textures/paths don’t appear, verify the `Models` folder and shader files are present as shown above.
 
-## 4) Troubleshooting
+### 4) Troubleshooting
 
 - “The code execution cannot proceed because XXX.dll was not found.”
   - Copy the missing DLL from your development machine (commonly `C:\msys64\mingw64\bin`) into the exe folder. The usual suspects are `glew32.dll`, `glfw3.dll`, `freeglut.dll`, `assimp*.dll`, `zlib1.dll`, and the MinGW runtime DLLs.
@@ -63,7 +77,7 @@ If the window opens but textures/paths don’t appear, verify the `Models` folde
 - Crash at start on another PC
   - Verify the GPU/driver supports OpenGL 3.x+ and that all required DLLs listed above are present.
 
-## 5) Optional: Package a portable folder
+### 5) Optional: Package a portable folder
 
 To move the app to another computer, zip a folder with this structure:
 
@@ -93,7 +107,7 @@ Portable_Forest/
 
 Extract anywhere and run `EnchantedForest.exe`. No installation required.
 
-## 6) Controls (quick reminder)
+### 6) Controls (quick reminder)
 
 - View: `V`
 - Paths style: `P`
@@ -106,3 +120,76 @@ Extract anywhere and run `EnchantedForest.exe`. No installation required.
 - Exit: `ESC`
 
 Enjoy exploring the Enchanted Forest! ✨
+
+---
+
+## Development Setup (Build from Source)
+
+The project builds on Windows with MinGW-w64 `g++` or Code::Blocks (MinGW toolchain), using GLEW, GLFW, Assimp, and optional FreeGLUT. The examples below match the paths in this repository’s build task.
+
+### A) Install toolchain and libraries
+
+- Compiler/IDE
+  - MinGW-w64 (recommended) or Code::Blocks with bundled MinGW.
+  - Verify `g++ --version` in PowerShell.
+
+- OpenGL and utilities
+  - GLEW (binaries): typically `C:\\Program Files (x86)\\GLEW`.
+  - GLFW (prebuilt): typically `C:\\Program Files\\GLFW`.
+  - Assimp (prebuilt): DLL + import lib (name may vary: `assimp.dll` or `libassimp-*.dll`).
+  - Optional: FreeGLUT.
+
+Tip (MSYS2 alternative):
+
+```powershell
+# In MSYS2 UCRT64 shell
+pacman -S mingw-w64-ucrt-x86_64-glew mingw-w64-ucrt-x86_64-glfw mingw-w64-ucrt-x86_64-assimp
+```
+
+### B) Configure Code::Blocks
+
+Project → Build options…
+
+- Compiler settings → Other options:
+  - `-std=c++17 -O2`
+
+- Search directories → Compiler:
+  - `C:\\Program Files (x86)\\GLEW\\include`
+  - `C:\\Program Files\\GLFW\\include`
+
+- Search directories → Linker:
+  - `C:\\Program Files (x86)\\GLEW\\lib\\Release\\x64`
+  - `C:\\Program Files\\GLFW\\lib`
+  - (Add your Assimp lib directory if applicable)
+
+- Linker settings → Link libraries (names only):
+  - `glew32`, `glfw3`, `opengl32`, `user32`, `gdi32`, `shell32`, `kernel32`, `ws2_32`, `bcrypt`
+  - If used: `assimp`, `freeglut`, `zlib1`
+
+- Output target:
+  - e.g., `bin/Debug/EnchantedForest.exe`.
+
+Copy the required DLLs next to the built exe (see Portable Run Guide → Required runtime DLLs).
+
+### C) Build with g++ (PowerShell)
+
+From the project root (mirrors the VS Code build task):
+
+```powershell
+g++ -std=c++17 -O2 \
+  -I. \
+  -I"C:/Program Files (x86)/GLEW/include" \
+  -I"C:/Program Files/GLFW/include" \
+  main.cpp shader_utils.cpp model.cpp \
+  -L"C:/Program Files (x86)/GLEW/lib/Release/x64" \
+  -L"C:/Program Files/GLFW/lib" \
+  -lglew32 -lglfw3 -lopengl32 -luser32 -lgdi32 -lshell32 -lkernel32 -lws2_32 -lbcrypt \
+  -o bin/Debug/EnchantedForest.exe
+```
+
+If linking Assimp/FreeGLUT, append `-lassimp -lfreeglut -lz` and ensure their library directories are included via `-L...`, with corresponding DLLs beside the exe.
+
+### D) Assets and working directory
+
+- Keep `forest.vert`, `fragment_shader.glsl`, and the `Models/` folder beside the exe (e.g., `bin/Debug`).
+- Launch with the working directory set to the exe folder so relative paths like `Models/fountain.obj` resolve.
